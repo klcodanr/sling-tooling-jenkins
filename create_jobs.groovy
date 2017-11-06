@@ -1,7 +1,9 @@
-def svnBase = "https://svn.apache.org/repos/asf/sling/trunk"
-// all modules should be listed here
+def repoUrl = "https://raw.githubusercontent.com/apache/sling-aggregator/master/default.xml"
+def repoBase = "https://github.com/apache/"
+// Repositories are read from the repo definition file. Not all keys are currently
+// read from the repo xml file.
 // keys:
-//   - location ( required ) : the SVN directory relatory to svnBase
+//   - location ( required ) : the GitHub project name
 //   - jdks (optional) : override the default jdks to use for build
 //   - downstream (optional): list of downstream projects
 //   - archive (optional): list of archive patterns
@@ -9,9 +11,19 @@ def svnBase = "https://svn.apache.org/repos/asf/sling/trunk"
 //   - rebuildDaily (optional): boolean, when enabled configures the build to run once every
 //                                24 hours,even if no changes are found in source control
 
+def modules = []
+// TODO - move blacklist out of this file
+def blacklist = ['sling-tooling-jenkins', 'sling-tooling-scm']
 
-// force module jobs deletion while we setup the new git jobs
-def modules = [] 
+println "Hello"
+
+def manifest = new XmlParser().parse(repoUrl)
+manifest.project.each { project ->
+    jobName = project.@name.toString().replace(".git","")
+    if ( !blacklist.contains(jobName) ) {
+        modules += [ location: project.@name.toString().replace(".git", "")]
+    }
+}
 
 // should be sorted from the oldest to the latest version
 // so that artifacts built using the oldest version are
@@ -28,7 +40,6 @@ def jdkMapping = [
 
 modules.each { module ->
 
-    def svnDir = svnBase +"/" + module.location
     def jdks = module.jdks ?: defaultJdks
     def deploy = true
 
@@ -57,10 +68,7 @@ for more details</p>''')
             }
 
             scm {
-                svn(svnDir) { svnNode ->
-                    svnNode / browser(class: 'hudson.scm.browsers.ViewSVN') /
-                        url << 'http://svn.apache.org/viewcvs.cgi/?root=Apache-SVN'
-                }
+                github('apache/' + module.location)
             }
 
             blockOnUpstreamProjects()
@@ -129,5 +137,5 @@ for more details</p>''')
 }
 
 String jobName(String location, String jdk) {
-    return "sling-" + location.replaceAll('/','-')+'-' + jdk;
+    return location + '-' + jdk;
 }
