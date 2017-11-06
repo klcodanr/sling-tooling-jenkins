@@ -15,8 +15,6 @@ def modules = []
 // TODO - move blacklist out of this file
 def blacklist = ['sling-tooling-jenkins', 'sling-tooling-scm']
 
-println "Hello"
-
 def manifest = new XmlParser().parse(repoUrl)
 manifest.project.each { project ->
     jobName = project.@name.toString().replace(".git","")
