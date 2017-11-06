@@ -68,7 +68,12 @@ for more details</p>''')
             }
 
             scm {
-                github('apache/' + module.location)
+                git {
+                    remote {
+                        github('apache/' + module.location)
+                    }
+                    branches('master')
+                }
             }
 
             blockOnUpstreamProjects()
