@@ -1,4 +1,5 @@
-def repoUrl = "https://raw.githubusercontent.com/apache/sling-aggregator/master/default.xml"
+def rawUrlPrefix = "https://raw.githubusercontent.com/apache"
+def repoUrl = rawUrlPrefix + "/sling-aggregator/master/default.xml"
 def repoBase = "https://github.com/apache/"
 // Repositories are read from the repo definition file. Not all keys are currently
 // read from the repo xml file.
@@ -19,7 +20,21 @@ def manifest = new XmlParser().parse(repoUrl)
 manifest.project.each { project ->
     jobName = project.@name.toString().replace(".git","")
     if ( !blacklist.contains(jobName) ) {
-        modules += [ location: project.@name.toString().replace(".git", "")]
+        def slingMod = []
+        try {
+            slingMod = new XmlParser().parse(rawUrlPrefix + "/" + jobName + "/master/.sling-module.xml")
+        } catch ( FileNotFoundException e) {
+            println "No .sling-module.xml for ${jobName}, using defaults"
+        }
+        def module = [ location: jobName ]
+        if ( slingMod?.jenkins?.jdks ) {
+            def jdks = []
+            slingMod.jenkins.jdks.jdk.each { jdks.add it.text() }
+            module.jdks = jdks
+
+            println "${jobName}: overriding JDKs list to be ${jdks}"
+        }
+        modules += module
     }
 }
 
