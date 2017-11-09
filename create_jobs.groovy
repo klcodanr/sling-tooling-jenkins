@@ -14,7 +14,7 @@ def repoBase = "https://github.com/apache/"
 
 def modules = []
 // TODO - move blacklist out of this file
-def blacklist = ['sling-tooling-jenkins', 'sling-tooling-scm']
+def blacklist = ['sling-tooling-jenkins', 'sling-tooling-scm', 'sling-aggregator', 'sling-whiteboard']
 
 def manifest = new XmlParser().parse(repoUrl)
 manifest.project.each { project ->
