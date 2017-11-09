@@ -13,27 +13,31 @@ def repoBase = "https://github.com/apache/"
 //                                24 hours,even if no changes are found in source control
 
 def modules = []
-// TODO - move blacklist out of this file
-def blacklist = ['sling-tooling-jenkins', 'sling-tooling-scm', 'sling-aggregator', 'sling-whiteboard']
 
 def manifest = new XmlParser().parse(repoUrl)
 manifest.project.each { project ->
     jobName = project.@name.toString().replace(".git","")
-    if ( !blacklist.contains(jobName) ) {
-        def slingMod = []
-        try {
-            slingMod = new XmlParser().parse(rawUrlPrefix + "/" + jobName + "/master/.sling-module.xml")
-        } catch ( FileNotFoundException e) {
-            println "No .sling-module.xml for ${jobName}, using defaults"
-        }
-        def module = [ location: jobName ]
-        if ( slingMod?.jenkins?.jdks ) {
-            def jdks = []
-            slingMod.jenkins.jdks.jdk.each { jdks.add it.text() }
-            module.jdks = jdks
+    def slingMod = []
+    def createJob = true
+    try {
+        slingMod = new XmlParser().parse(rawUrlPrefix + "/" + jobName + "/master/.sling-module.xml")
+    } catch ( FileNotFoundException e) {
+        println "${jobName}: no .sling-module.xml found, using defaults"
+    }
+    def module = [ location: jobName ]
+    if ( slingMod?.jenkins?.jdks ) {
+        def jdks = []
+        slingMod.jenkins.jdks.jdk.each { jdks.add it.text() }
+        module.jdks = jdks
 
-            println "${jobName}: overriding JDKs list to be ${jdks}"
-        }
+        println "${jobName}: overriding JDKs list to be ${jdks}"
+    }
+
+    if ( slingMod?.jenkins?.enabled ) {
+        createJob = Boolean.valueOf(slingMod.jenkins.enabled.text())
+        println "${jobName}: overriding job creation with value ${createJob}"
+    }
+    if ( createJob ) {
         modules += module
     }
 }
