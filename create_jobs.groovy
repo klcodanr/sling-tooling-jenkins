@@ -37,6 +37,12 @@ manifest.project.each { project ->
         createJob = Boolean.valueOf(slingMod.jenkins.enabled.text())
         println "${jobName}: overriding job creation with value ${createJob}"
     }
+
+    if ( slingMod?.jenkins?.enableXvfb ) {
+        module.enableXvfb = Boolean.valueOf(slingMod.jenkins.enableXvfb.text())
+        println "${jobName}: overriding xvfb support with value ${module.enableXvfb}"
+    }
+
     if ( createJob ) {
         modules += module
     }
@@ -108,6 +114,10 @@ for more details</p>''')
             wrappers {
                 timeout {
                     elastic(400, 3, 30)
+                }
+
+                if ( module.enableXvfb ) {
+                    xvfb('default')
                 }
             }
 
