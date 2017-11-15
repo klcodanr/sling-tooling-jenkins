@@ -48,6 +48,11 @@ manifest.project.each { project ->
         println "${jobName}: overriding default maven goal with value ${module.mavenGoal}"
     }
 
+    if ( slingMod?.jenkins?.rebuildFrequency ) {
+        module.rebuildFrequency = slingMod.jenkins.rebuildFrequency.text()
+        println "${jobName}: overriding default rebuild frequency with value ${module.rebuildFrequency}"
+    }
+
     if ( createJob ) {
         modules += module
     }
@@ -109,7 +114,7 @@ for more details</p>''')
             triggers {
                 snapshotDependencies(true)
                 scm('H/15 * * * *')
-                def rebuildFrequency = module.rebuildDaily ? '@daily' : '@weekly'
+                def rebuildFrequency = module.rebuildFrequency ? module.rebuildFrequency : '@weekly'
                 cron(rebuildFrequency)
             }
 
