@@ -52,6 +52,12 @@ manifest.project.each { project ->
         println "${jobName}: overriding archive patterns to be ${module.archivePatterns}"
     }
 
+    if ( slingMod?.jenkins?.downstreamProjects ) {
+        module.downstreamProjects = []
+        slingMod.jenkins.downstreamProjects.downstreamProject.each { module.downstreamProjects.add it.text() }
+        println "${jobName}: overriding downstream projects to be ${module.downstreamProjects}"
+    }
+
     if ( createJob ) {
         modules += module
     }
