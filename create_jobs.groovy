@@ -1,17 +1,10 @@
 def rawUrlPrefix = "https://raw.githubusercontent.com/apache"
 def repoUrl = rawUrlPrefix + "/sling-aggregator/master/default.xml"
 def repoBase = "https://github.com/apache/"
-// Repositories are read from the repo definition file. Not all keys are currently
-// read from the repo xml file.
-// keys:
-//   - location ( required ) : the GitHub project name
-//   - jdks (optional) : override the default jdks to use for build
-//   - downstream (optional): list of downstream projects
-//   - archive (optional): list of archive patterns
-//   - extraGoalsParams (optional): additional string for the Maven goals to execute
-//   - rebuildDaily (optional): boolean, when enabled configures the build to run once every
-//                                24 hours,even if no changes are found in source control
-
+// Repositories are read from the repo definition file. Customizations must be
+// placed in a .sling-module.xml file in the git repository root. See
+// https://cwiki.apache.org/confluence/display/SLING/Sling+module+descriptor 
+// for a description of the format
 def modules = []
 
 def manifest = new XmlParser().parse(repoUrl)
