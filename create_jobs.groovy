@@ -43,6 +43,11 @@ manifest.project.each { project ->
         println "${jobName}: overriding xvfb support with value ${module.enableXvfb}"
     }
 
+    if ( slingMod?.jenkins?.mavenGoal ) {
+        module.mavenGoal = slingMod.jenkins.mavenGoal.text()
+        println "${jobName}: overriding default maven goal with value ${module.mavenGoal}"
+    }
+
     if ( createJob ) {
         modules += module
     }
@@ -140,7 +145,8 @@ for more details</p>''')
             // mix of Java 7 and Java 8 artifacts for projects which
             // use these 2 versions
             def extraGoalsParams = module.extraGoalsParams ?: ""
-            goals( (deploy ? "-U clean deploy" : "-U clean verify") + " " + extraGoalsParams)
+            def goal = module.mavenGoal ? module.mavenGoal : ( deploy ? "deploy" : "verify" )
+            goals( "-U clean ${goal} ${extraGoalsParams}")
 
             publishers {
                 if ( deploy && downstreamJobs ) {
