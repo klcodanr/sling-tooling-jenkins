@@ -53,6 +53,12 @@ manifest.project.each { project ->
         println "${jobName}: overriding default rebuild frequency with value ${module.rebuildFrequency}"
     }
 
+    if ( slingMod?.jenkins?.archivePatterns ) {
+        module.archivePatterns = []
+        slingMod.jenkins.archivePatterns.archivePattern.each { module.archivePatterns.add it.text() }
+        println "${jobName}: overriding archive patterns to be ${module.archivePatterns}"
+    }
+
     if ( createJob ) {
         modules += module
     }
@@ -158,9 +164,9 @@ for more details</p>''')
                     downstream(downstreamJobs)
                 }
 
-                if (module.archive) {
+                if (module.archivePatterns) {
                     archiveArtifacts() {
-                        module.archive.each { archiveEntry ->
+                        module.archivePatterns.each { archiveEntry ->
                             pattern(archiveEntry)
                         }
                     }
