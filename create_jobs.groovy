@@ -122,7 +122,7 @@ for more details</p>''')
                 }
 
                 if ( module.enableXvfb ) {
-                    xvfb('default')
+                    xvfb('Xvfb')
                 }
             }
 
