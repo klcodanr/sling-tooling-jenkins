@@ -73,7 +73,8 @@ def defaultSlave = "ubuntu && !H21 && !H22 && !H24 && !H26 && !H29 && !H32 && !H
 def jdkMapping = [
     "1.7": "JDK 1.7 (latest)",
     "1.8": "JDK 1.8 (latest)",
-    "9"  : "JDK 9 b181"
+    "9"  : "JDK 9 b181",
+    "10" : "JDK 10 b36 (early access build)"
 ]
 
 modules.each { module ->
