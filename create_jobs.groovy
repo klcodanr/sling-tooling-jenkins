@@ -88,7 +88,7 @@ def jdkMapping = [
 modules.each { module ->
 
     if ( module.pipeline ) {
-        multibranchPipelineJob(location) {
+        multibranchPipelineJob(module.location) {
             description('''
     <p>This build was automatically generated and any manual edits will be lost.</p>
     <p>See <a href="https://cwiki.apache.org/confluence/display/SLING/Sling+Jenkins+Setup">Sling Jenkins Setup</a>
