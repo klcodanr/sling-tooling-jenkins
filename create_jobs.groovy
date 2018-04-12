@@ -97,7 +97,7 @@ modules.each { module ->
                 github {
                     scanCredentialsId('rombert')
                     repoOwner('apache')
-                    repository(location)
+                    repository(module.location)
                 }
             }
 
