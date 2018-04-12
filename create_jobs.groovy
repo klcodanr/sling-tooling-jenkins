@@ -20,7 +20,7 @@ manifest.project.each { project ->
 
     def module = [ location: jobName ]
 
-    def connection = new URL(rawUrlPrefix + "/" + jobName + "/master/Jenkinsfile")
+    def connection = new URL(rawUrlPrefix + "/" + jobName + "/master/Jenkinsfile").openConnection()
     module.pipeline = connection.responseCode == 200
     if ( module.pipeline ) {
         println "${jobName}: Jenkinsfile found, creating pipeline job"
