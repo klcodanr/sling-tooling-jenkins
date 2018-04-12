@@ -20,12 +20,10 @@ manifest.project.each { project ->
 
     def module = [ location: jobName ]
 
-    try {
-        def connection = new URL(rawUrlPrefix + "/" + jobName + "/master/Jenkinsfile")
-        module.pipeline = connection.responseCode == 200
-        if ( module.pipeline ) {
-            println "${jobName}: Jenkinsfile found, creating pipeline job"
-        }
+    def connection = new URL(rawUrlPrefix + "/" + jobName + "/master/Jenkinsfile")
+    module.pipeline = connection.responseCode == 200
+    if ( module.pipeline ) {
+        println "${jobName}: Jenkinsfile found, creating pipeline job"
     }
 
     if ( slingMod?.jenkins?.jdks ) {
