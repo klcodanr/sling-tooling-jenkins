@@ -95,7 +95,7 @@ modules.each { module ->
     for more details</p>''')
             branchSources {
                 github {
-                    scanCredentialsId('sling-github-token')
+                    scanCredentialsId('sling-github-token') // needs repo:status scope
                     repoOwner('apache')
                     repository(module.location)
                 }
