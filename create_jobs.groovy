@@ -5,6 +5,8 @@ def repoBase = "https://github.com/apache/"
 // placed in a .sling-module.xml file in the git repository root. See
 // https://cwiki.apache.org/confluence/display/SLING/Sling+module+descriptor 
 // for a description of the format
+// This is a Jenkins DSL script, I don't think you can run it standalone.
+// See that wiki page for how to setup a local Jenkins test instance.
 def modules = []
 
 def manifest = new XmlParser().parse(repoUrl)
