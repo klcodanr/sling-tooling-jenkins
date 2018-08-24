@@ -84,7 +84,9 @@ def jdkMapping = [
     "1.7": "JDK 1.7 (latest)",
     "1.8": "JDK 1.8 (latest)",
     "9"  : "JDK 1.9 (latest)",
-    "10" : "JDK 10 b36 (early access build)"
+    "10" : "JDK 10 (latest)",
+    "11" : "JDK 11 (latest)"
+
 ]
 
 modules.each { module ->
