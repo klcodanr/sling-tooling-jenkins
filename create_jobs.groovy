@@ -208,6 +208,11 @@ modules.each { module ->
                             }
                         }
                     }
+                    
+                    sonar {
+                        branch('master')
+                        installationName('ASF Sonar Analysis')
+                    }
 
                     // TODO - can we remove the glob and rely on the defaults?
                     archiveJunit('**/target/surefire-reports/*.xml,**/target/failsafe-reports/*.xml') {
